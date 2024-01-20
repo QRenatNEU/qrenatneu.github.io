@@ -10,7 +10,7 @@ let allGames = localStorage.getItem(KEY_ALL_GAMES) ?? [];
 let currentTimer;
 let timeLeft = interval;
 
-const userAnswers = [];
+let userAnswers = [];
 
 const sampleQuestions = [
     {
@@ -58,8 +58,8 @@ function displayQuizHistory() {
         const history = localStorage.getItem(`${KEY_USER_ANSWERS}++${i}`);
         const optionElement = document.createElement('li');
         if (!history) {
-            optionElement.innerHTML = `Game Round ${i}: Sorry your score is lost`;
-            optionsList.appendChild(optionElement);
+            // optionElement.innerHTML = `Game Round ${i}: Sorry your score is lost`;
+            // optionsList.appendChild(optionElement);
             continue;
         }
         const thatAnswer = JSON.parse(history);
@@ -156,6 +156,7 @@ function selectQuestion(index) {
 
 function startGame() {
     questionNum = 0; // Start from the first round
+    userAnswers = [];
     const scoreDisplay = document.getElementById('scoreDisplay');
     scoreDisplay.style.display = 'none';
     const roundDisplay = document.getElementById('roundDisplay');
@@ -304,6 +305,7 @@ function updateTimerDisplay(time) {
 
 function stopTimer() {
     // stop counting
+    timeLeft = 0;
     clearInterval(currentTimer);
     document.getElementById('timerDisplay').style.display = 'none';
 }
