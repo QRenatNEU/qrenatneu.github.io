@@ -54,7 +54,7 @@ function displayQuizHistory() {
     prevButton.style.display = 'none';
     nextButton.style.display = 'none';
 
-    for (let i = 1; i < gameRound; i++) {
+    for (let i = 1; i <= gameRound; i++) {
         const history = localStorage.getItem(`${KEY_USER_ANSWERS}++${i}`);
         const optionElement = document.createElement('li');
         if (!history) {
@@ -131,6 +131,7 @@ function arraysEqual(arr1, arr2) {
 function showResults() {
     // show result and restart
     stopTimer();
+    displayQuestion(getCurrentGameInfo()[questionNum])
     localStorage.setItem(`${KEY_USER_ANSWERS}++${gameRound}`, JSON.stringify(userAnswers));
     const restartPrompt = document.getElementById('restartPrompt');
     restartPrompt.style.display = 'inline';
@@ -246,6 +247,10 @@ function submitAnswer() {
 }
 
 function lastQuestion() {
+    if (questionNum === 0) {
+        alert('This is the first question!');
+        return;
+    }
     questionNum--;
     const userAnswered = userAnswers[questionNum] !== 'U';
     if (userAnswered) {
@@ -263,7 +268,6 @@ function nextQuestion(skipConfirm = false) {
 
     if (skipConfirm || confirm("Are you sure you want to submit your answer and go to the next question?")) {
         submitAnswer();
-        questionNum++;
         const notAnsweredList = userAnswers.filter(ans => ans === 'U');
         if (notAnsweredList.length === 0) {
             alert('Congratulations! You have finished the game');
@@ -271,6 +275,7 @@ function nextQuestion(skipConfirm = false) {
             showResults();
             return;
         }
+        questionNum++;
         const nextGame = getCurrentGameInfo()[questionNum];
         if (nextGame) {
             displayQuestion(nextGame);
