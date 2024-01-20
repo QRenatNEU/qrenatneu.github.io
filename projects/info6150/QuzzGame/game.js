@@ -64,7 +64,7 @@ function displayQuizHistory() {
         }
         const thatAnswer = JSON.parse(history);
         const score = calculateScoreInRound(thatAnswer);
-        optionElement.innerHTML = `Game Round ${i}: Your score is ${(score / getCurrentGameInfo().length * 100).toFixed(0)} out of 100`;
+        optionElement.innerHTML = `Game Round ${i}: Your score is <span style="color: red">${(score / getCurrentGameInfo().length * 100).toFixed(0)}</span> out of 100, ${score >= 4 ? 'wow!!!' : (score <= 1 ? 'come on!' : 'keep going!')}`;
         optionsList.appendChild(optionElement);
     }
 }
