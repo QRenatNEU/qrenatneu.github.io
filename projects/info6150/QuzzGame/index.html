@@ -87,21 +87,25 @@
 </head>
 <body>
 <div id="quizContainer">
+    <h1>Quzz Game</h1>
     <div id="innerContainer">
         <div id="questionDisplay"></div>
         <ul id="optionsList"></ul>
         <div id="upperButtonContainer">
             <button id="prevButton">Previous</button>
-            <button id="nextButton">Submit and Next</button>
+            <button id="nextButton">Next</button>
         </div>
         <div id="lowerButtonContainer">
             <button id="viewAll">View All Questions</button>
             <button id="viewHistory">View History</button>
-            <button id="restartButton" style="display:none;">Restart</button>
         </div>
-        <div id="scoreDisplay" style="display:none;"></div>
+        <p id="restartPrompt" style="color: green; display:none;">Find this interesting? Try Again!</p>
+        <button id="restartButton" style="width: 100%; display:none; background-color: green">Restart</button>
+        <div id="scoreDisplay" style="display:none; color: indianred"></div>
         <div id="timerDisplay" style="display:none;"></div>
+        <div id="roundDisplay" style="display:none;"></div>
     </div>
+    <p style="font-style: italic; color: blueviolet">Designed and implemented by Qi.Ren</p>
 </div>
 <!-- Control game to start -->
 <script src="game.js"></script>
