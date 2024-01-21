@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><title>2-Minute Countdown Timer</title></head>
+<body><h1>2-Minute Countdown Timer</h1>
+<p id="countdown"></p>
+<script>
+    let timeLeft = 120;
+
+    function updateCountdown() {
+        return new Promise((res, rej) => {
+            if (timeLeft <= 0) {
+                clearInterval(countdownInterval);
+                rej();
+            } else {
+                timeLeft--;
+                res();
+            }
+        })
+    }
+
+    function updatePage() {
+        const minutes = Math.floor(timeLeft / 60);
+        const seconds = timeLeft % 60;
+        document.getElementById('countdown').textContent = `${minutes}m ${seconds}s`;
+    }
+
+    function endPage() {
+        document.getElementById('countdown').textContent = 'Countdown expired!';
+    }
+
+    updatePage();
+
+    const countdownInterval = setInterval(() => {
+        updateCountdown().then(updatePage).catch(endPage)
+    }, 1000);
+</script>
+</body>
+</html>
+
+
+
+
