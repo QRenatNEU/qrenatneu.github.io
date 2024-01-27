@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-<div id="quizContainer">
+<div id="quizContainer" class="container" style="display: none">
     <h1>Quzz Game</h1>
     <div id="innerContainer">
         <div id="questionDisplay"></div>
@@ -30,6 +30,23 @@
         <p style="font-style: italic; color: blueviolet">Hint: You can try playing this game in whichever question order, this game only stops when you answer all the questions!</p>
         <p style="font-style: italic; color: blueviolet">Designed and implemented by Qi.Ren</p>
     </div>
+</div>
+<div id="timerContainer" class="container" style="display: none">
+    <h1>Timer</h1>
+    <div id="timeLeft"></div>
+    <div style="display: flex">
+        <button id="start">Start</button>
+        <button id="stop" disabled>Stop</button>
+        <button id="reset" disabled>Reset</button>
+        <button id="pause" disabled>Pause</button>
+        <button id="resume" disabled>Resume</button>
+    </div>
+</div>
+<div id="mainContainer" class="container" >
+    <h1>Welcome!</h1>
+    <p>What would you like to do today?</p>
+    <button id="timerStarter">Play Timer</button>
+    <button id="quzzStarter">Play Quzz Game</button>
 </div>
 <!-- Control game to start -->
 <script src="game.js"></script>

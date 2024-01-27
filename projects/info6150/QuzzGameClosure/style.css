@@ -43,18 +43,18 @@ body {
     background-color: #f4f4f4;
     color: #333;
 }
-#quizContainer {
-    max-width: 600px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    padding: 20px;
-    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-    background: white;
-    border-radius: 8px;
-    margin: 50px auto auto;
-}
+/*#quizContainer {*/
+/*    max-width: 600px;*/
+/*    display: flex;*/
+/*    flex-direction: column;*/
+/*    align-items: center;*/
+/*    justify-content: center;*/
+/*    padding: 20px;*/
+/*    box-shadow: 0 4px 8px rgba(0,0,0,0.1);*/
+/*    background: white;*/
+/*    border-radius: 8px;*/
+/*    margin: 50px auto auto;*/
+/*}*/
 #innerContainer {
     width: 100%;
 }
@@ -69,10 +69,34 @@ button {
     cursor: pointer;
     transition: background-color 0.3s;
 }
+button:disabled {
+    padding: 10px 15px;
+    margin: 10px;
+    border: none;
+    border-radius: 5px;
+    background-color: #007bff;
+    color: white;
+    font-weight: bold;
+    cursor: not-allowed; /* Change cursor to indicate disabled */
+    opacity: 0.5; /* Dim the button to indicate it's disabled */
+    pointer-events: none; /* Prevents any interaction with the button */
+}
 button:hover {
     background-color: #0056b3;
 }
 #upperButtonContainer, #lowerButtonContainer {
     display: flex;
     justify-content: center;
+}
+.container {
+    max-width: 600px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    background: white;
+    border-radius: 8px;
+    margin: 50px auto auto;
 }

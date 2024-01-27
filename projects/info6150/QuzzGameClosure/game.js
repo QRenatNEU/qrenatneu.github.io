@@ -2,13 +2,11 @@ const KEY_CURRENT_ROUND = 'currentRound';
 const KEY_ALL_GAMES = 'allgames';
 const KEY_USER_ANSWERS = 'userAnswers';
 
-const interval = 5;
+const interval = 30;
 
 let questionNum = 0;
 let gameRound = localStorage.getItem(KEY_CURRENT_ROUND) ?? 1;
 let allGames = localStorage.getItem(KEY_ALL_GAMES) ?? [];
-let currentTimer;
-let timeLeft = interval;
 
 let userAnswers = [];
 
@@ -55,7 +53,7 @@ function createTimer(timeInSeconds) {
     }
 
     function canResumeTimer() {
-        return !!timeLeft;
+        return !isRunning() && !!timeLeft && timeLeft < timeInSeconds;
     }
 
     function pauseTimer() {
@@ -102,34 +100,36 @@ const {
 
 // ================= Timer Implementation Ends ================== //
 
+// ============ QuzzGame Starts ============== //
+
 const sampleQuestions = [
     {
         quz: "What is the capital of France?",
-        choices: { 'A': 'Paris', 'B': 'Berlin', 'C': 'London', 'D': 'Madrid' },
+        choices: {'A': 'Paris', 'B': 'Berlin', 'C': 'London', 'D': 'Madrid'},
         correctAnswer: 'A',
         quzType: 'single'
     },
     {
         quz: "Which languages are official in Canada?",
-        choices: { 'A': 'English', 'B': 'French', 'C': 'Spanish', 'D': 'Portuguese' },
+        choices: {'A': 'English', 'B': 'French', 'C': 'Spanish', 'D': 'Portuguese'},
         correctAnswer: 'AB',
         quzType: 'multi'
     },
     {
         quz: "What is the largest planet in our Solar System?",
-        choices: { 'A': 'Earth', 'B': 'Mars', 'C': 'Jupiter', 'D': 'Saturn' },
+        choices: {'A': 'Earth', 'B': 'Mars', 'C': 'Jupiter', 'D': 'Saturn'},
         correctAnswer: 'C',
         quzType: 'single'
     },
     {
         quz: "Which elements are needed to make water?",
-        choices: { 'A': 'Hydrogen', 'B': 'Oxygen', 'C': 'Carbon', 'D': 'Nitrogen' },
+        choices: {'A': 'Hydrogen', 'B': 'Oxygen', 'C': 'Carbon', 'D': 'Nitrogen'},
         correctAnswer: 'AB',
         quzType: 'multi'
     },
     {
         quz: "What is the answer of 1 + 1?",
-        choices: { 'A': '1', 'B': '2', 'C': '3', 'D': '4' },
+        choices: {'A': '1', 'B': '2', 'C': '3', 'D': '4'},
         correctAnswer: 'B',
         quzType: 'single'
     },
@@ -188,7 +188,7 @@ function calculateScoreInRound(userAnswers) {
     // Loop through each question
     for (let i = 0; i < getCurrentGameInfo().length; i++) {
         const userAnswer = userAnswers[i] ? userAnswers[i].split('') : [];
-        console.log(getCurrentGameInfo()[i],  getCurrentGameInfo()[i].correctAnswer)
+        console.log(getCurrentGameInfo()[i], getCurrentGameInfo()[i].correctAnswer)
         const correctAnswer = getCurrentGameInfo()[i].correctAnswer.split('');
         console.log(userAnswer, correctAnswer)
 
@@ -206,7 +206,7 @@ function calculateScore() {
     // Loop through each question
     for (let i = 0; i < getCurrentGameInfo().length; i++) {
         const userAnswer = userAnswers[i] ? userAnswers[i].split('') : [];
-        console.log(getCurrentGameInfo()[i],  getCurrentGameInfo()[i].correctAnswer)
+        console.log(getCurrentGameInfo()[i], getCurrentGameInfo()[i].correctAnswer)
         const correctAnswer = getCurrentGameInfo()[i].correctAnswer.split('');
         console.log(userAnswer, correctAnswer)
 
@@ -439,5 +439,91 @@ function displayQuestion(gameInfo) {
     }
 }
 
-// Call startGame() to begin the game
-startGame();
+// ============ QuzzGame ends ============== //
+
+// ============ Timer Starts =============== //
+
+function startTimerGame() {
+
+    const totalTime = 300;
+
+    const {
+        startTimer,
+        stopTimer,
+        resetTimer,
+        resumeTimer,
+        pauseTimer,
+        canPauseTimer,
+        canResumeTimer,
+        isRunning,
+        getCurrentTime
+    } = createTimer(totalTime);
+
+    const timeLeft = document.getElementById('timeLeft');
+    const btnStart = document.getElementById('start');
+    const btnStop = document.getElementById('stop');
+    const btnReset = document.getElementById('reset');
+    const btnPause = document.getElementById('pause');
+    const btnResume = document.getElementById('resume');
+
+    function convertSecondsToMinutesSeconds(seconds) {
+        const minutes = Math.floor(seconds / 60);
+        const remainingSeconds = seconds % 60;
+        return `${minutes} : ${remainingSeconds}`;
+    }
+
+    function updateDisplay() {
+        const current = getCurrentTime();
+        timeLeft.textContent = current === 0 ? 'Time up' : `Time Left: ${convertSecondsToMinutesSeconds(current)}`;
+        btnStart.disabled = isRunning() || getCurrentTime() < totalTime;
+        btnResume.disabled = !canResumeTimer();
+        btnPause.disabled = !canPauseTimer();
+        btnStop.disabled = !isRunning();
+        btnReset.disabled = !isRunning();
+    }
+
+    btnStart.onclick = () => {
+        startTimer()
+    }
+
+    btnStop.onclick = () => {
+        stopTimer()
+    }
+
+    btnResume.onclick = () => {
+        resumeTimer()
+    }
+
+    btnPause.onclick = () => {
+        pauseTimer()
+    }
+
+    btnReset.onclick = () => {
+        resetTimer()
+    }
+
+
+    setInterval(updateDisplay, 1000);
+}
+
+// ============ Timer Ends =============== //
+
+function startChoice() {
+    // Call startGame() to begin the game
+    // startGame();
+    document.getElementById('timerStarter').onclick = () => {
+        document.getElementById('quizContainer').style.display = 'none';
+        document.getElementById('timerContainer').style.display = 'flex';
+        document.getElementById('mainContainer').style.display = 'none';
+        startTimerGame();
+    }
+    document.getElementById('quzzStarter').onclick = () => {
+        // Call startGame() to begin the game
+        document.getElementById('quizContainer').style.display = 'flex';
+        document.getElementById('timerContainer').style.display = 'none';
+        document.getElementById('mainContainer').style.display = 'none';
+        startGame();
+    }
+}
+
+startChoice();
