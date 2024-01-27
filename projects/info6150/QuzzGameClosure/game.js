@@ -98,6 +98,73 @@ const {
     getCurrentTime
 } = createTimer(interval);
 
+function createStopWatchTimer() {
+    let seconds = 0;
+    let timer = 0;
+
+    function startTimer() {
+        if (timer) {
+            return;
+        }
+        timer = setInterval(() => {
+            seconds ++;
+        }, 1000);
+    }
+
+    function stopTimer() {
+        if (timer) {
+            clearInterval(timer);
+        }
+        timer = 0;
+    }
+
+    function resetTimer() {
+        stopTimer();
+        seconds = 0;
+    }
+
+    function isRunning() {
+        return timer && seconds > 0;
+    }
+
+    function canPauseTimer() {
+        return isRunning();
+    }
+
+    function canResumeTimer() {
+        return !isRunning() && seconds > 0;
+    }
+
+    function pauseTimer() {
+        if (canPauseTimer()) {
+            clearInterval(timer);
+            timer = 0;
+        }
+    }
+
+    function resumeTimer() {
+        if (canResumeTimer()) {
+            startTimer();
+        }
+    }
+
+    function getCurrentTime() {
+        return seconds;
+    }
+
+    return {
+        startTimer,
+        stopTimer,
+        resetTimer,
+        pauseTimer,
+        resumeTimer,
+        canPauseTimer,
+        canResumeTimer,
+        isRunning,
+        getCurrentTime
+    }
+}
+
 // ================= Timer Implementation Ends ================== //
 
 // ============ QuzzGame Starts ============== //
@@ -445,8 +512,6 @@ function displayQuestion(gameInfo) {
 
 function startTimerGame() {
 
-    const totalTime = 300;
-
     const {
         startTimer,
         stopTimer,
@@ -457,7 +522,7 @@ function startTimerGame() {
         canResumeTimer,
         isRunning,
         getCurrentTime
-    } = createTimer(totalTime);
+    } = createStopWatchTimer();
 
     const timeLeft = document.getElementById('timeLeft');
     const btnStart = document.getElementById('start');
@@ -469,17 +534,17 @@ function startTimerGame() {
     function convertSecondsToMinutesSeconds(seconds) {
         const minutes = Math.floor(seconds / 60);
         const remainingSeconds = seconds % 60;
-        return `${minutes} : ${remainingSeconds}`;
+        return `${minutes<10?'0':''}${minutes} : ${remainingSeconds<10?'0':''}${remainingSeconds}`;
     }
 
     function updateDisplay() {
         const current = getCurrentTime();
-        timeLeft.textContent = current === 0 ? 'Time up' : `Time Left: ${convertSecondsToMinutesSeconds(current)}`;
-        btnStart.disabled = isRunning() || getCurrentTime() < totalTime;
+        timeLeft.textContent = `${convertSecondsToMinutesSeconds(current)}`;
+        btnStart.disabled = canResumeTimer() || current > 0;
         btnResume.disabled = !canResumeTimer();
-        btnPause.disabled = !canPauseTimer();
-        btnStop.disabled = !isRunning();
-        btnReset.disabled = !isRunning();
+        // btnPause.disabled = !canPauseTimer();
+        btnStop.disabled = !canPauseTimer();
+        btnReset.disabled = !canResumeTimer();
     }
 
     btnStart.onclick = () => {
@@ -499,7 +564,7 @@ function startTimerGame() {
     }
 
     btnReset.onclick = () => {
-        resetTimer()
+        resetTimer();
     }
 
 
