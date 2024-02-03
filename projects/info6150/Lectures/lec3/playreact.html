@@ -1,0 +1,33 @@
+<html>
+<head>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/6.26.0/babel.min.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/react/16.8.6/umd/react.development.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/16.8.6/umd/react-dom.development.js"></script>
+</head>
+<body>
+    <div id="root">
+
+    </div>
+    <script type="text/babel">
+        const root = document.getElementById('root');
+        // const reactRoot = ReactDOM.createRoot(root);
+
+        const HelloWorld = () => {
+
+            const myname = 'Qi';
+
+            return (
+                <div>
+                    <h1>Hello World</h1>
+                    <h2>Greetings from {myname}</h2>
+                </div>
+            )
+        }
+
+        ReactDOM.render(
+            <HelloWorld/>,
+            root
+        )
+    </script>
+</body>
+</html>
