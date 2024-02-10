@@ -136,6 +136,7 @@ export default function Form({itemList, setItemList}) {
                                 <label htmlFor={`name ${idx}`}>Name</label>
                                 <textarea style={inputStyle} rows={1} key={`name ${idx}`} id={`name ${idx}`} name={'name'}
                                           readOnly={!selection.includes(user)}
+                                          inputMode={'text'}
                                           value={`${user.name}`}
                                 onChange={(e) => {
                                     const els = itemList.filter(item => item.id !== user.id);
@@ -152,6 +153,7 @@ export default function Form({itemList, setItemList}) {
                                 <textarea style={inputStyle} key={`email ${idx}`} rows={1} id={`email ${idx}`} name={'email'}
                                           readOnly={!selection.includes(user)}
                                           value={`${user.email}`}
+                                          inputMode={'email'}
                                           onChange={(e) => {
                                               const els = itemList.filter(item => item.id !== user.id);
                                               user.email = e.target.value;
@@ -168,6 +170,7 @@ export default function Form({itemList, setItemList}) {
                                 <textarea style={inputStyle} rows={1} key={`age ${idx}`} id={`age ${idx}`} name={'age'}
                                           readOnly={!selection.includes(user)}
                                           value={`${user.age}`}
+                                          inputMode={'decimal'}
                                           onChange={(e) => {
                                               const els = itemList.filter(item => item.id !== user.id);
                                               user.age = e.target.value;
