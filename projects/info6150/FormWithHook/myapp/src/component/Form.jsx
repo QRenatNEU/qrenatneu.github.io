@@ -1,7 +1,7 @@
 import {useEffect, useState} from "react";
 
 const formStyle = {
-    maxWidth: '800px',
+    maxWidth: '1080px',
     maxHeight: '480px',
     display: 'flex',
     flexDirection: 'column',
@@ -72,6 +72,12 @@ export default function Form({itemList, setItemList}) {
 
     function handleSubmit(e) {
         e.preventDefault();
+
+        if (selection.length < 1) {
+            window.alert('no selection')
+            return
+        }
+
         // console.log(e);
 
         // const formData = new FormData(e.target);
@@ -80,7 +86,7 @@ export default function Form({itemList, setItemList}) {
 
         const tmp = []
         let tmp2 = {}
-        let id = 0;
+        let id = 1;
 
         Object.keys(e.target).forEach(key => {
             const tgt = e.target[key];
@@ -92,7 +98,7 @@ export default function Form({itemList, setItemList}) {
                 if (Object.keys(tmp2).length > 1) {
                     tmp.push({id, ...tmp2});
                     tmp2 = {}
-                    id ++;
+                    id++;
                 }
             }
             tmp2[tgt.name] = tgt.value;
@@ -134,23 +140,25 @@ export default function Form({itemList, setItemList}) {
                                     }}
                                 />
                                 <label htmlFor={`name ${idx}`}>Name</label>
-                                <textarea style={inputStyle} rows={1} key={`name ${idx}`} id={`name ${idx}`} name={'name'}
+                                <textarea style={inputStyle} rows={1} key={`name ${idx}`} id={`name ${idx}`}
+                                          name={'name'}
                                           readOnly={!selection.includes(user)}
                                           inputMode={'text'}
                                           value={`${user.name}`}
-                                onChange={(e) => {
-                                    const els = itemList.filter(item => item.id !== user.id);
-                                    user.name = e.target.value;
-                                    setItemList((itemList) => {
-                                        const ls = [...els, user];
-                                        console.log(ls);
-                                        ls.sort((a,b) => a.id - b.id);
-                                        console.log(ls);
-                                        return ls;
-                                    });
-                                }}></textarea>
+                                          onChange={(e) => {
+                                              const els = itemList.filter(item => item.id !== user.id);
+                                              user.name = e.target.value;
+                                              setItemList((itemList) => {
+                                                  const ls = [...els, user];
+                                                  console.log(ls);
+                                                  ls.sort((a, b) => a.id - b.id);
+                                                  console.log(ls);
+                                                  return ls;
+                                              });
+                                          }}></textarea>
                                 <label htmlFor={`email ${idx}`}>Email</label>
-                                <textarea style={inputStyle} key={`email ${idx}`} rows={1} id={`email ${idx}`} name={'email'}
+                                <textarea style={inputStyle} key={`email ${idx}`} rows={1} id={`email ${idx}`}
+                                          name={'email'}
                                           readOnly={!selection.includes(user)}
                                           value={`${user.email}`}
                                           inputMode={'email'}
@@ -160,7 +168,7 @@ export default function Form({itemList, setItemList}) {
                                               setItemList((itemList) => {
                                                   const ls = [...els, user];
                                                   console.log(ls);
-                                                  ls.sort((a,b) => a.id - b.id);
+                                                  ls.sort((a, b) => a.id - b.id);
                                                   console.log(ls);
                                                   return ls;
                                               });
@@ -177,12 +185,32 @@ export default function Form({itemList, setItemList}) {
                                               setItemList((itemList) => {
                                                   const ls = [...els, user];
                                                   console.log(ls);
-                                                  ls.sort((a,b) => a.id - b.id);
+                                                  ls.sort((a, b) => a.id - b.id);
                                                   console.log(ls);
                                                   return ls;
                                               });
                                           }}
                                 ></textarea>
+                                <label htmlFor={`gender ${idx}`}>Gender</label>
+                                <select
+                                    onChange={(e) => {
+                                        const els = itemList.filter(item => item.id !== user.id);
+                                        user.gender = e.target.value;
+                                        console.log(user)
+                                        setItemList((itemList) => {
+                                            const ls = [...els, user];
+                                            console.log(ls);
+                                            ls.sort((a, b) => a.id - b.id);
+                                            console.log(ls);
+                                            return ls;
+                                        });
+                                    }}
+                                    style={inputStyle} disabled={!selection.includes(user)} key={`gender ${idx}`}
+                                    id={`gender ${idx}`}
+                                    name={'gender'}>
+                                    <option value="male">male</option>
+                                    <option value="female">female</option>
+                                </select>
                             </div>
                         })
                     ) : <div>No Item</div>
@@ -198,30 +226,41 @@ export default function Form({itemList, setItemList}) {
             }}>
                 <button onClick={() => {
                     const toAdd = {
-                        id: -itemList.length,
+                        id: -itemList.length - 1, // make it before
                         name: '',
                         email: '',
+                        gender: 'male',
                         age: 0
                     };
                     setItemList([toAdd, ...itemList]);
                     setSelection([toAdd]);
-                }} type={'button'} style={buttonStyle}>Add User</button>
+                    setFilter([]);
+                }} type={'button'} style={buttonStyle}>Add User
+                </button>
                 <button type={'button'} style={buttonStyle} onClick={() => {
                     const res = window.prompt('enter user id');
                     console.log(res)
-                    const find = itemList.filter(item => `${item.id}` == res);
+                    const find = itemList.filter(item => {
+                        return `${item.id}` == res || `${item.id}` == `-${res}`
+                    });
                     if (!find || find.length < 1) {
                         window.alert('not found!');
                     }
                     setFilter(find);
-                }}>Find User</button>
+                }}>Find User
+                </button>
                 <button type={'button'} onClick={() => {
                     // console.log(selection, itemList.filter(item => !selection.includes(item)));
-                    setItemList(itemList.filter(item => !selection.includes(item)))}
-                } style={buttonStyle}>Remove User</button>
+                    setItemList(itemList.filter(item => !selection.includes(item)))
+                    setFilter([]);
+                }
+                } style={buttonStyle}>Remove User
+                </button>
                 {singleSelect
-                    ? <button type={'button'} style={buttonStyle} onClick={() => setSingleSelect(false)}>Multi Select</button>
-                    : <button type={'button'} style={buttonStyle} onClick={() => setSingleSelect(true)}>Single Select</button>}
+                    ? <button type={'button'} style={buttonStyle} onClick={() => setSingleSelect(false)}>Multi
+                        Select</button>
+                    : <button type={'button'} style={buttonStyle} onClick={() => setSingleSelect(true)}>Single
+                        Select</button>}
                 <button type={"submit"} style={buttonStyle}>Save & Submit</button>
             </div>
         </form>
